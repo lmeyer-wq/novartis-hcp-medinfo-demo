@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Novartis Medical Information — HCP Portal (Mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    /* ---- Novartis brand palette (approx — replace with exact brand-guide hex) ---- */
+    --orange:#F5511E;         /* Novartis accent orange */
+    --carmine:#F5511E;        /* accent alias used across the UI */
+    --carmine-dk:#D8420F;
+    --carmine-soft:#FCEDE7;   /* soft warm tint */
+    --ink:#1A1A1A;            /* near-black text */
+    --ink-soft:#454545;
+    --muted:#7a7570;
+    --bg:#FBFAF9;             /* near-white, faint warmth */
+    --surface:#ffffff;
+    --line:#E8E4E0;
+    --line-2:#f3efec;
+    /* ---- warm brand gradient (coral -> lavender), used for AI features ---- */
+    --ai1:#FF7A4D; --ai2:#B9A7E6; --ai-soft:#FFF2EC; --ai-ink:#B4441C;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(26,26,26,.05), 0 10px 30px rgba(26,26,26,.06);
+    --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --disp:'Inter',var(--sans);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{font-family:var(--disp);font-weight:700;line-height:1.12;letter-spacing:-.02em;margin:0}
+  a{color:inherit;text-decoration:none}
+  button{font-family:var(--sans);cursor:pointer}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+
+  /* utility bar */
+  .utility{background:var(--ink);color:#c9c2d0;font-size:12.5px}
+  .utility .wrap{display:flex;justify-content:space-between;align-items:center;height:36px}
+  .utility strong{color:#fff;font-weight:600}
+  .utility .u-right{display:flex;gap:20px;opacity:.92}
+  .utility .u-right span{cursor:pointer}
+  .utility .u-right span:hover{color:#fff}
+
+  /* header */
+  header.site{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40}
+  .bar{display:flex;align-items:center;gap:30px;height:78px}
+  .brand{display:flex;align-items:center;gap:11px;flex-shrink:0}
+  .brand .flame{color:var(--ink);flex-shrink:0}
+  .flame .fl-fill{fill:currentColor}
+  .flame .fl-stroke{fill:none;stroke:currentColor;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+  .wordmark{font-family:'Cinzel',Georgia,serif;font-weight:600;font-size:23px;color:var(--ink);letter-spacing:.05em;text-transform:uppercase}
+  .brand .div{width:1px;height:30px;background:var(--line)}
+  .brand .sub{font-size:14px;font-weight:700;line-height:1.15;font-family:var(--disp);letter-spacing:-.01em}
+  .brand .sub span{display:block;color:var(--muted);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-family:var(--sans)}
+  nav.main{display:flex;gap:4px;margin-left:4px}
+  nav.main button{background:none;border:0;padding:9px 15px;border-radius:10px;font-size:14.5px;font-weight:500;color:var(--ink-soft);position:relative}
+  nav.main button:hover{background:var(--bg);color:var(--ink)}
+  nav.main button.active{color:var(--ink);font-weight:600}
+  nav.main button.active::after{content:"";position:absolute;left:15px;right:15px;bottom:-21px;height:3px;background:var(--carmine);border-radius:3px}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:16px}
+  .user{display:flex;align-items:center;gap:11px}
+  .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--carmine),#7a1848);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+  .user .u-meta{font-size:13px;line-height:1.25}
+  .user .u-meta b{font-weight:600}
+  .user .u-meta span{display:block;color:var(--muted);font-size:11px;font-weight:600}
+
+  .view{display:none;animation:fade .35s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--carmine)}
+  .btn{display:inline-flex;align-items:center;gap:9px;border:0;border-radius:12px;padding:13px 22px;font-size:15px;font-weight:600}
+  .btn.primary{background:var(--ink);color:#fff}
+  .btn.primary:hover{background:#000}
+  .btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+  .btn.ghost:hover{border-color:var(--ink-soft)}
+  .btn.ai{background:linear-gradient(135deg,var(--ai1),var(--ai2));color:#fff}
+  .btn.ai:hover{filter:brightness(1.06)}
+  .tag{font-size:11px;font-weight:600;color:var(--ink-soft);background:var(--line-2);padding:4px 10px;border-radius:7px;letter-spacing:.02em}
+
+  /* hero + AI smart search */
+  .hero{background:radial-gradient(1150px 460px at 93% -25%, rgba(255,122,77,.20), transparent 60%),radial-gradient(950px 440px at 4% 5%, rgba(185,167,230,.16), transparent 55%),linear-gradient(180deg,#fff,var(--bg));border-bottom:1px solid var(--line)}
+  .hero .wrap{padding:60px 24px 54px}
+  .hero h1{font-size:50px;max-width:15ch;font-weight:500;letter-spacing:-.025em}
+  .hero h1 b{font-weight:800}
+  .hero p.lead{font-size:18px;color:var(--muted);max-width:58ch;margin:18px 0 0}
+  .smart{margin-top:30px;max-width:680px}
+  .smart-ring{padding:2px;border-radius:16px;background:linear-gradient(135deg,var(--ai1),var(--ai2))}
+  .smart-inner{display:flex;gap:10px;background:#fff;border-radius:14px;padding:9px 9px 9px 16px;align-items:center}
+  .smart-inner .spark{color:var(--ai2);flex-shrink:0}
+  .smart-inner input{flex:1;border:0;outline:none;font-size:16px;font-family:var(--sans);color:var(--ink);background:transparent}
+  .smart-inner input::placeholder{color:#a49bab}
+  .smart-labels{display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .smart-labels .ai-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--ai-ink);background:var(--ai-soft);padding:5px 11px;border-radius:999px}
+  .suggest{font-size:13px;color:var(--muted);border:1px solid var(--line);background:#fff;padding:6px 12px;border-radius:999px;font-weight:500}
+  .suggest:hover{border-color:var(--ai2);color:var(--ai-ink)}
+  .hero-meta{margin-top:22px;display:flex;gap:24px;flex-wrap:wrap;font-size:13.5px;color:var(--muted)}
+  .hero-meta b{color:var(--ink)}
+
+  /* AI answer card */
+  .ai-answer{max-width:820px;margin-top:24px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:none}
+  .ai-answer.show{display:block;animation:fade .3s ease}
+  .ai-answer .ai-top{display:flex;align-items:center;gap:10px;padding:14px 22px;background:var(--ai-soft);border-bottom:1px solid #f6ddd0}
+  .ai-answer .ai-top .g{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--ai1),var(--ai2));display:grid;place-items:center;color:#fff}
+  .ai-answer .ai-top b{font-size:13.5px;font-weight:700}
+  .ai-answer .ai-top .lbl{font-size:11.5px;color:var(--ai-ink);font-weight:600;margin-left:auto}
+  .ai-answer .ai-main{padding:22px 24px}
+  .ai-answer .ai-main h3{font-family:var(--sans);font-size:15px;font-weight:700;margin-bottom:8px}
+  .ai-answer .ai-main p{font-size:14.5px;color:#2f2833;margin:0 0 12px}
+  .ai-answer .ai-main ul{margin:0 0 12px;padding-left:20px}
+  .ai-answer .ai-main li{font-size:14px;color:#2f2833;margin:5px 0}
+  .sources{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .src-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--carmine-dk);background:var(--carmine-soft);padding:6px 11px;border-radius:8px;cursor:pointer}
+  .src-chip:hover{background:#fbdce9}
+  .ai-foot{display:flex;align-items:center;gap:14px;padding:14px 24px;border-top:1px solid var(--line);background:#fdfcfb;flex-wrap:wrap}
+  .ai-foot .dis{font-size:11.5px;color:var(--muted);max-width:44ch}
+  .ai-foot .acts{margin-left:auto;display:flex;gap:8px}
+  .mini{font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:#fff}
+  .mini:hover{border-color:var(--ink-soft)}
+
+  section.block{padding:52px 0}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:26px;gap:20px}
+  .sec-head h2{font-size:28px}
+  .sec-head a.more{font-size:14px;font-weight:600;color:var(--carmine)}
+
+  .ta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .ta-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;display:flex;gap:16px;transition:transform .18s,box-shadow .18s,border-color .18s;cursor:pointer;position:relative}
+  .ta-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#e3d3d9}
+  .ta-card.feat{border-color:var(--carmine);box-shadow:0 8px 26px rgba(229,0,110,.12)}
+  .ta-ic{width:46px;height:46px;border-radius:12px;background:var(--carmine-soft);color:var(--carmine);display:grid;place-items:center;flex-shrink:0}
+  .ta-card h3{font-family:var(--sans);font-size:16.5px;font-weight:700}
+  .ta-card p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+  .ta-card .cnt{margin-top:10px;font-size:12.5px;color:var(--carmine);font-weight:600}
+  .feat-tag{position:absolute;top:14px;right:14px;font-size:10.5px;font-weight:700;letter-spacing:.05em;color:#fff;background:var(--carmine);padding:3px 8px;border-radius:6px}
+
+  .art-list{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .art-item{background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start;cursor:pointer;transition:border-color .15s,background .15s}
+  .art-item:hover{border-color:#e3d3d9;background:#fffdfe}
+  .art-item .doc{color:var(--carmine);flex-shrink:0;margin-top:2px}
+  .art-item h4{font-family:var(--sans);font-size:15px;font-weight:600}
+  .art-item p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+
+  .band{background:linear-gradient(120deg,var(--ink),#3a2140);color:#fff;border-radius:22px;padding:42px 46px;display:flex;align-items:center;gap:32px;justify-content:space-between;flex-wrap:wrap}
+  .band h2{color:#fff;font-size:27px}
+  .band p{margin:9px 0 0;color:#d6c9d5;max-width:52ch;font-size:15px}
+  .band .actions{display:flex;gap:12px;flex-wrap:wrap}
+  .band .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.32)}
+  .band .btn.ghost:hover{border-color:#fff}
+
+  /* forms */
+  .page-head{padding:44px 0 8px}
+  .page-head h1{font-size:35px}
+  .page-head p{color:var(--muted);margin:10px 0 0;font-size:16px;max-width:62ch}
+  .form-shell{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start;padding-bottom:64px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  form.inquiry{padding:30px 32px 34px}
+  .fs{margin-bottom:22px}
+  .fs .lbl{display:block;font-size:13.5px;font-weight:600;margin-bottom:7px}
+  .fs .lbl .req{color:var(--carmine)}
+  .fs .hint{font-size:12.5px;color:var(--muted);font-weight:400;margin-left:4px}
+  .field{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px 13px;font-size:14.5px;font-family:var(--sans);color:var(--ink);background:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
+  .field:focus{border-color:var(--carmine);box-shadow:0 0 0 3px rgba(229,0,110,.13)}
+  textarea.field{min-height:118px;resize:vertical}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .checkline{display:flex;gap:12px;align-items:flex-start;padding:16px;border:1px dashed var(--line);border-radius:12px;background:var(--bg)}
+  .checkline input{width:20px;height:20px;margin-top:2px;accent-color:var(--carmine);flex-shrink:0}
+  .checkline label{font-size:14px;font-weight:600}
+  .checkline label span{display:block;font-weight:400;color:var(--muted);font-size:12.5px;margin-top:2px}
+  .ae-reveal{margin-top:16px;border:1px solid var(--carmine);background:var(--carmine-soft);border-radius:12px;padding:18px;display:none}
+  .ae-reveal.show{display:block;animation:fade .3s ease}
+  .ae-reveal .ae-head{display:flex;align-items:center;gap:9px;color:var(--carmine-dk);font-weight:700;font-size:13.5px;letter-spacing:.02em}
+  .ae-reveal p{font-size:13px;color:#7a2248;margin:8px 0 12px}
+  .form-foot{display:flex;align-items:center;gap:16px;margin-top:8px}
+  .form-foot .note{font-size:12.5px;color:var(--muted)}
+  .rail{padding:24px 24px 26px}
+  .rail h4{font-family:var(--sans);font-size:14px;font-weight:700;margin-bottom:6px}
+  .rail p{font-size:13px;color:var(--muted);margin:0 0 16px}
+  .rail .step{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line);font-size:13.5px}
+  .rail .step b{display:block}
+  .rail .step .n{width:24px;height:24px;border-radius:50%;background:var(--carmine-soft);color:var(--carmine);font-weight:700;font-size:12.5px;display:grid;place-items:center;flex-shrink:0}
+  .rail .conf{background:var(--carmine-soft);color:#8a1552;border-radius:10px;padding:12px 14px;font-size:12.5px;display:flex;gap:9px;margin-top:16px}
+
+  /* my inquiries */
+  .table-card{overflow:hidden;margin-bottom:64px}
+  .tbl-top{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--line)}
+  .tbl-top h3{font-family:var(--sans);font-size:15px;font-weight:700}
+  .filters{display:flex;gap:8px}
+  .chip{font-size:12.5px;font-weight:600;padding:6px 13px;border-radius:999px;border:1px solid var(--line);color:var(--ink-soft);background:#fff}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:13px 24px;background:var(--bg)}
+  tbody td{padding:16px 24px;border-top:1px solid var(--line);font-size:14px;vertical-align:middle}
+  tbody tr:hover{background:#fffdfe;cursor:pointer}
+  .caseno{font-weight:600;color:var(--carmine)}
+  .subj b{font-weight:600}
+  .subj span{display:block;font-size:12.5px;color:var(--muted)}
+  .st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px}
+  .st::before{content:"";width:7px;height:7px;border-radius:50%}
+  .st.new{background:#eef4fb;color:#2a5a86}.st.new::before{background:#2a5a86}
+  .st.prog{background:#fff5e8;color:#9a5b09}.st.prog::before{background:#c07b12}
+  .st.ans{background:#e9f7ee;color:#1c7a43}.st.ans::before{background:#1c9a52}
+  .st.ae{background:var(--carmine-soft);color:var(--carmine-dk)}.st.ae::before{background:var(--carmine)}
+
+  /* article */
+  .crumb{font-size:13px;color:var(--muted);padding:26px 0 0}
+  .crumb a{color:var(--carmine);font-weight:500}
+  .article-shell{display:grid;grid-template-columns:1fr 300px;gap:42px;padding:14px 0 64px;align-items:start}
+  article.doc-body h1{font-size:35px;max-width:24ch}
+  .art-meta{display:flex;gap:10px;align-items:center;margin:16px 0 24px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+  article.doc-body h2{font-size:21px;margin:28px 0 10px}
+  article.doc-body p{font-size:16px;color:#2b2530;margin:0 0 14px}
+  article.doc-body ul{margin:0 0 16px;padding-left:20px}
+  article.doc-body li{font-size:15.5px;color:#2b2530;margin:6px 0}
+  .fict{font-size:12.5px;background:var(--ai-soft);color:var(--ai-ink);border-radius:9px;padding:10px 13px;font-weight:600;display:inline-flex;gap:8px;align-items:center;margin-bottom:18px}
+  .callout{border-left:3px solid var(--carmine);background:var(--carmine-soft);padding:14px 18px;border-radius:0 10px 10px 0;margin:20px 0;font-size:14px;color:#6e1c47}
+  .helpful{border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:16px;margin-top:30px}
+  .helpful b{font-family:var(--sans);font-size:14px}
+  .helpful .btn.ghost{padding:9px 16px;font-size:13.5px}
+  aside.rel{position:sticky;top:100px}
+  aside.rel h4{font-family:var(--sans);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:12px}
+  aside.rel a{display:block;font-size:14px;font-weight:500;padding:11px 0;border-top:1px solid var(--line)}
+  aside.rel a:hover{color:var(--carmine)}
+  .ask-mini{background:linear-gradient(135deg,var(--ai1),var(--ai2));color:#fff;border-radius:14px;padding:20px;margin-top:22px}
+  .ask-mini h4{color:#fff;font-family:var(--disp);font-size:18px;text-transform:none;letter-spacing:-.01em}
+  .ask-mini p{color:#eef0ff;font-size:13px;margin:6px 0 14px}
+  .ask-mini .btn{width:100%;justify-content:center;padding:11px;background:#fff;color:var(--ai-ink)}
+
+  /* footer */
+  footer.site{background:var(--ink);color:#a99fb2;margin-top:20px}
+  footer .wrap{padding:46px 24px 30px;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:30px}
+  footer h5{color:#fff;font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin:0 0 12px}
+  footer a{display:block;font-size:13.5px;padding:4px 0;color:#a99fb2}
+  footer a:hover{color:#fff}
+  .foot-note{font-size:12px;color:#8a7f94;max-width:44ch}
+  .sf-badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#eae6e2;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:6px 12px;margin-top:14px}
+  .ae-foot{border:1px solid rgba(229,0,110,.5);background:rgba(229,0,110,.12);color:#f3b9d3;border-radius:10px;padding:12px 14px;font-size:12.5px;margin-top:14px}
+  .legal{border-top:1px solid rgba(255,255,255,.1);font-size:12px;color:#8a7f94}
+  .legal .wrap{padding:16px 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+  /* chat */
+  .chat-launch{position:fixed;right:26px;bottom:26px;z-index:60;display:flex;align-items:center;gap:11px;background:linear-gradient(135deg,var(--ai1),var(--ai2));color:#fff;border:0;padding:14px 20px 14px 17px;border-radius:999px;font-weight:600;font-size:14.5px;box-shadow:0 12px 34px rgba(144,80,233,.4)}
+  .chat-launch:hover{filter:brightness(1.06)}
+  .chat-launch .dot{width:9px;height:9px;border-radius:50%;background:#7dffb0;box-shadow:0 0 0 3px rgba(125,255,176,.3)}
+  .chat-panel{position:fixed;right:26px;bottom:92px;z-index:61;width:384px;max-width:calc(100vw - 40px);height:560px;max-height:calc(100vh - 130px);background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 64px rgba(27,22,32,.3);display:none;flex-direction:column;overflow:hidden}
+  .chat-panel.open{display:flex;animation:fade .25s ease}
+  .chat-head{background:linear-gradient(135deg,var(--ai1),var(--ai2));color:#fff;padding:15px 18px;display:flex;align-items:center;gap:12px}
+  .chat-head .bot{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:17px}
+  .chat-head b{font-size:15px;display:block;font-family:var(--disp)}
+  .chat-head span{font-size:11.5px;color:#e7ecff}
+  .chat-head .x{margin-left:auto;background:none;border:0;color:#eef;font-size:22px;line-height:1}
+  .chat-body{flex:1;overflow-y:auto;padding:18px;background:var(--bg);display:flex;flex-direction:column;gap:12px}
+  .msg{max-width:86%;padding:11px 14px;border-radius:15px;font-size:13.5px;line-height:1.5}
+  .msg.bot{background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px;align-self:flex-start}
+  .msg.me{background:var(--ink);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+  .msg.bot .src{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:11.5px;color:var(--carmine-dk);font-weight:600;background:var(--carmine-soft);padding:5px 9px;border-radius:7px}
+  .msg.bot ul{margin:8px 0 2px;padding-left:18px}
+  .msg.bot li{margin:3px 0}
+  .chat-quick{padding:10px 14px;display:flex;gap:7px;flex-wrap:wrap;background:var(--bg);border-top:1px solid var(--line)}
+  .chat-quick button{text-align:left;background:#fff;color:var(--ai-ink);border:1px solid #e2ddf7;border-radius:9px;padding:7px 10px;font-size:12px;font-weight:600}
+  .chat-quick button:hover{background:var(--ai-soft)}
+  .chat-input{border-top:1px solid var(--line);padding:12px;display:flex;gap:8px;background:#fff}
+  .chat-input input{flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-size:13.5px;outline:none;font-family:var(--sans)}
+  .chat-input input:focus{border-color:var(--ai2)}
+  .chat-input button{background:linear-gradient(135deg,var(--ai1),var(--ai2));border:0;color:#fff;border-radius:11px;width:44px;display:grid;place-items:center}
+  .disclaimer{background:#fff8ec;color:#8a5a11;font-size:11.5px;text-align:center;padding:7px 12px;border-top:1px solid #f2e2c4}
+
+  /* ---- therapy hub / events / med-ed ---- */
+  .hub-hero{background:linear-gradient(120deg,#fff,var(--carmine-soft));border:1px solid var(--line);border-radius:var(--radius);padding:32px 34px;margin:22px 0 8px;display:flex;justify-content:space-between;gap:28px;flex-wrap:wrap;align-items:flex-start}
+  .hub-hero .h-l{max-width:62ch}
+  .hub-hero h1{font-size:36px;margin-top:6px}
+  .hub-hero .subttl{color:var(--muted);margin:12px 0 0;font-size:15.5px}
+  .qfacts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}
+  .qfact{background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px 17px}
+  .qfact .k{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .qfact .v{font-family:var(--disp);font-weight:800;font-size:20px;margin-top:5px;letter-spacing:-.02em}
+  .qfact .v.sm{font-size:15px;font-weight:700}
+  .reslist{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .res{background:#fff;border:1px solid var(--line);border-radius:12px;padding:17px;cursor:pointer;transition:transform .16s,box-shadow .16s,border-color .16s;display:flex;gap:13px;align-items:flex-start}
+  .res:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#e3d3d9}
+  .res .ic{color:var(--carmine);flex-shrink:0;margin-top:2px}
+  .res h4{font-family:var(--sans);font-size:14.5px;font-weight:600}
+  .res p{margin:3px 0 0;font-size:12.5px;color:var(--muted)}
+  .evt{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;gap:18px;align-items:center;margin-bottom:12px;transition:border-color .15s}
+  .evt:hover{border-color:#e3d3d9}
+  .evt.link{cursor:pointer}
+  .evt .date{flex-shrink:0;width:60px;text-align:center;background:var(--carmine-soft);border-radius:10px;padding:9px 6px}
+  .evt .date .mo{font-size:11px;font-weight:700;color:var(--carmine);text-transform:uppercase;letter-spacing:.04em}
+  .evt .date .dy{font-family:var(--disp);font-weight:800;font-size:20px;line-height:1.1;color:var(--carmine-dk)}
+  .evt .meta{flex:1;min-width:0}
+  .evt .meta h4{font-family:var(--sans);font-size:15.5px;font-weight:600}
+  .evt .meta .loc{font-size:12.5px;color:var(--muted);margin-top:3px}
+  .evt .meta .sym{font-size:12.5px;color:var(--carmine-dk);margin-top:6px;font-weight:600}
+  .evt .ev-act{flex-shrink:0;display:flex;flex-direction:column;gap:7px}
+  .mecards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .me{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .16s,box-shadow .16s}
+  .me:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .me .thumb{height:116px;background:linear-gradient(135deg,var(--ai1),var(--ai2));display:flex;align-items:center;justify-content:center;color:#fff;position:relative}
+  .me .thumb .type{position:absolute;top:10px;left:10px;font-size:10.5px;font-weight:700;background:rgba(26,26,26,.32);padding:4px 9px;border-radius:6px;letter-spacing:.04em}
+  .me .body{padding:15px 17px}
+  .me .body h4{font-family:var(--sans);font-size:14.5px;font-weight:600}
+  .me .body p{font-size:12.5px;color:var(--muted);margin:5px 0 0}
+  .me .body .foot{margin-top:11px;font-size:12px;color:var(--carmine);font-weight:600;display:flex;justify-content:space-between}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+  @media(max-width:900px){.qfacts{grid-template-columns:1fr 1fr}.reslist,.mecards{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}.hub-hero{padding:22px}}
+
+  @media(max-width:900px){
+    nav.main,.user .u-meta{display:none}
+    .ta-grid{grid-template-columns:1fr 1fr}
+    .art-list{grid-template-columns:1fr}
+    .form-shell,.article-shell{grid-template-columns:1fr}
+    footer .wrap{grid-template-columns:1fr}
+    .hero h1{font-size:34px}
+  }
+  /* ================================================================
+     SLDS / LIGHTNING THEME LAYER
+     Makes the portal read as a Novartis-branded Experience Cloud (LWR)
+     site assembled from standard Lightning base components. This block
+     is intentionally last so it overrides the earlier custom styling.
+     Tokens approximate the Salesforce Lightning Design System.
+     ================================================================ */
+  :root{
+    --sans:'Salesforce Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --disp:var(--sans);
+    --bg:#f3f3f3; --surface:#ffffff; --line:#e5e5e5; --line-2:#f3f2f2;
+    --ink:#080707; --ink-soft:#3e3e3c; --muted:#706e6b;
+    --radius:.25rem;
+    --shadow:0 2px 2px 0 rgba(0,0,0,.10);
+    --carmine:#F5511E; --carmine-dk:#c93f13; --carmine-soft:#feeee8;
+  }
+  body{font-size:14px;color:var(--ink);background:var(--bg)}
+  h1,h2,h3,h4{font-family:var(--sans);letter-spacing:normal}
+  h1{font-weight:700}h2,h3,h4{font-weight:600}
+  .eyebrow{color:var(--carmine);letter-spacing:.08em}
+
+  /* --- buttons (lightning-button) --- */
+  .btn{border-radius:.25rem;font-size:13px;font-weight:600;padding:.5rem 1rem;line-height:1.4;gap:.4rem}
+  .btn.primary{background:var(--carmine);color:#fff;border:1px solid var(--carmine)}
+  .btn.primary:hover{background:var(--carmine-dk);border-color:var(--carmine-dk)}
+  .btn.ghost{background:#fff;border:1px solid #dddbda;color:var(--carmine)}
+  .btn.ghost:hover{background:#f4f6f9;border-color:#dddbda}
+  .btn.ai{border-radius:.25rem;background:linear-gradient(90deg,var(--ai1),var(--ai2));border:1px solid transparent}
+  .mini{border-radius:.25rem;border:1px solid #dddbda;color:var(--carmine);font-weight:600}
+  .mini:hover{background:#f4f6f9}
+
+  /* --- cards & tiles (lightning-card) --- */
+  .card,.ta-card,.res,.evt,.me,.qfact,.art-item,.ai-answer,.table-card,.hub-hero{border-radius:.25rem !important;border:1px solid var(--line);box-shadow:var(--shadow)}
+  .ta-card:hover,.res:hover,.me:hover,.art-item:hover,.evt:hover{transform:none;box-shadow:0 4px 8px rgba(0,0,0,.12);border-color:#dddbda}
+  section.block{padding:26px 0}
+  .sec-head h2{font-weight:700}
+  .sec-head a.more{color:var(--carmine)}
+
+  /* --- standard-icon look for tile/list icons --- */
+  .ta-ic{background:var(--carmine);color:#fff;border-radius:.25rem;width:2.5rem;height:2.5rem}
+  .ta-card.feat{border-color:var(--carmine);box-shadow:0 2px 2px 0 rgba(0,0,0,.10)}
+  .res .ic{background:var(--carmine);color:#fff;border-radius:.25rem;width:2rem;height:2rem;display:grid;place-items:center;margin-top:0}
+  .res .ic svg{width:17px;height:17px}
+  .art-item .doc{color:var(--carmine)}
+  .feat-tag{background:var(--carmine);border-radius:.25rem}
+
+  /* --- badges (lightning-badge) --- */
+  .tag{background:#ecebea;color:#3e3e3c;border-radius:15rem;padding:2px 10px;font-weight:600;letter-spacing:normal}
+  .st{border-radius:15rem;padding:3px 10px;border:none;font-weight:600}
+  .st::before{display:none}
+  .st.new{background:#eef4ff;color:#05628a}
+  .st.prog{background:#fdf0d5;color:#8c4b02}
+  .st.ans{background:#ebf7ec;color:#2e844a}
+  .st.ae{background:#fee9e8;color:#c23934}
+
+  /* --- global header (Experience Cloud LWR) --- */
+  header.site{border-bottom:1px solid var(--line);box-shadow:0 1px 1px rgba(0,0,0,.04)}
+  .bar{height:64px;gap:20px}
+  nav.main{height:100%}
+  nav.main button{height:100%;display:flex;align-items:center;border-radius:0;font-size:14px;color:var(--ink-soft);font-weight:400;padding:0 12px}
+  nav.main button:hover{background:transparent;color:var(--carmine)}
+  nav.main button.active{color:var(--carmine);font-weight:600;box-shadow:inset 0 -3px 0 var(--carmine)}
+  nav.main button.active::after{display:none}
+  .avatar{border-radius:50%;background:var(--carmine)}
+  .hdr-search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #dddbda;border-radius:.25rem;padding:0 10px;height:34px;width:230px;color:var(--muted)}
+  .hdr-search input{border:0;outline:none;font-family:var(--sans);font-size:13px;flex:1;background:transparent;color:var(--ink)}
+  .hdr-search:focus-within{border-color:var(--carmine);box-shadow:0 0 0 2px rgba(245,81,30,.2)}
+
+  /* --- hero + Einstein/Agentforce search --- */
+  .hero{background:#fff;border-bottom:1px solid var(--line)}
+  .hero .wrap{padding:44px 24px 40px}
+  .hero h1{font-size:32px;font-weight:700}
+  .smart-ring{border-radius:.3rem;background:linear-gradient(90deg,var(--ai1),var(--ai2))}
+  .smart-inner{border-radius:.2rem}
+  .ai-answer .ai-top{background:#f4f0ff}
+  .src-chip,.ai-badge,.suggest{border-radius:.25rem}
+
+  /* --- inputs (lightning-input) --- */
+  .field{border-radius:.25rem;border:1px solid #dddbda}
+  .field:focus{border-color:var(--carmine);box-shadow:0 0 0 2px rgba(245,81,30,.2)}
+  .checkline,.ae-reveal{border-radius:.25rem}
+
+  /* --- datatable (lightning-datatable) --- */
+  .table-card{border-radius:.25rem}
+  thead th{background:#fafaf9;color:#3e3e3c;border-bottom:1px solid var(--line);font-size:11px;font-weight:700}
+  tbody td{border-top:1px solid var(--line)}
+  tbody tr:hover{background:#f3f2f2}
+  .caseno{color:var(--carmine)}
+  .tbl-top h3{font-weight:700}
+
+  /* --- filter chips as SLDS pills --- */
+  .chip{border-radius:15rem;border:1px solid #dddbda;color:#3e3e3c;font-weight:600}
+  .chip.on{background:var(--carmine);border-color:var(--carmine);color:#fff}
+
+  /* --- events / education / hub --- */
+  .hub-hero{background:#fff}
+  .hub-hero h1{font-size:30px}
+  .evt .date{border-radius:.25rem;background:var(--carmine-soft)}
+  .evt .date .mo,.evt .date .dy{color:var(--carmine-dk)}
+  .me .thumb{background:#f3f2f2;color:var(--carmine)}
+  .me .thumb .type{background:#3e3e3c;border-radius:.2rem}
+  .qfact{border-radius:.25rem}
+  .qfact .v{font-family:var(--sans)}
+
+  /* --- callouts / bands --- */
+  .band{border-radius:.25rem}
+  .ask-mini{border-radius:.25rem}
+  .callout{border-radius:0 .25rem .25rem 0}
+  .fict{border-radius:.25rem}
+
+  /* --- Agentforce messaging window --- */
+  .chat-launch{border-radius:15rem}
+  .chat-panel{border-radius:.5rem}
+  .chat-input input,.msg{border-radius:.4rem}
+
+  /* --- Lightning card headers (standard icon + title bar) --- */
+  .lch{background:#fff;border:1px solid var(--line);border-bottom:none;border-radius:.25rem .25rem 0 0;padding:12px 18px;margin-bottom:0 !important;display:flex;align-items:center;gap:12px}
+  .lch .eyebrow{display:none}
+  .lch>div{flex:1;min-width:0}
+  .lch h2{font-size:16px !important;font-weight:700}
+  .lch .lch-ic{width:2rem;height:2rem;border-radius:.25rem;display:grid;place-items:center;color:#fff;flex-shrink:0}
+  .lch .lch-ic.orange{background:#F5511E}.lch .lch-ic.blue{background:#0176d3}.lch .lch-ic.green{background:#2e844a}.lch .lch-ic.purple{background:#9050e9}
+  .lch .lch-ic svg{width:18px;height:18px}
+  .lch a.more,.lch .filters,.lch>span{align-self:center}
+  .lch + .ta-grid,.lch + .reslist,.lch + .mecards,.lch + .qfacts,.lch + .art-list{background:#fff;border:1px solid var(--line);border-radius:0 0 .25rem .25rem;box-shadow:var(--shadow);padding:18px;margin:0}
+  .lch + .ta-grid .ta-card,.lch + .reslist .res,.lch + .mecards .me,.lch + .art-list .art-item,.lch + .qfacts .qfact{box-shadow:none}
+
+  /* --- Knowledge article component --- */
+  article.doc-body{background:#fff;border:1px solid var(--line);border-radius:.25rem;box-shadow:var(--shadow);padding:24px 26px}
+  .kb-head{display:flex;align-items:center;gap:12px;margin:-24px -26px 20px;padding:13px 22px;border-bottom:1px solid var(--line);background:#fafaf9;border-radius:.25rem .25rem 0 0}
+  .kb-head .ic{width:2rem;height:2rem;border-radius:.25rem;background:#F5511E;color:#fff;display:grid;place-items:center;flex-shrink:0}
+  .kb-head .kb-t{font-size:14px;font-weight:700}
+  .kb-head .kb-m{font-size:12px;color:var(--muted)}
+  .kb-head .kb-badge{margin-left:auto;font-size:11px;font-weight:700;color:#2e844a;background:#ebf7ec;border-radius:15rem;padding:3px 11px}
+  aside.rel{background:#fff;border:1px solid var(--line);border-radius:.25rem;box-shadow:var(--shadow);padding:16px 18px}
+  aside.rel h4:first-child{margin-bottom:6px}
+
+  /* --- inquiry record page (SLDS record view) --- */
+  .rec-hd{background:#fff;border:1px solid var(--line);border-radius:.25rem;box-shadow:var(--shadow);padding:16px 20px;margin-top:14px}
+  .rec-hd .top{display:flex;align-items:center;gap:12px}
+  .rec-hd .top .ic{width:2.5rem;height:2.5rem;border-radius:.25rem;background:#0176d3;color:#fff;display:grid;place-items:center;flex-shrink:0}
+  .rec-hd .t{flex:1;min-width:0}
+  .rec-hd .t small{color:var(--muted);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+  .rec-hd .t h1{font-size:20px;font-weight:700;margin-top:2px}
+  .rec-hd .hl{display:flex;gap:32px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+  .rec-hd .hl .k{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+  .rec-hd .hl .v{font-size:14px;font-weight:600;margin-top:3px}
+  .path{display:flex;margin-top:14px;border-radius:.25rem;overflow:hidden;border:1px solid var(--line)}
+  .path .stg{flex:1;text-align:center;font-size:12.5px;font-weight:600;padding:10px 6px;background:#fff;color:var(--ink-soft);border-right:1px solid var(--line)}
+  .path .stg:last-child{border-right:0}
+  .path .stg.done{background:#eef4fb;color:#05628a}
+  .path .stg.cur{background:var(--carmine);color:#fff}
+  .rec-body{display:grid;grid-template-columns:1fr 330px;gap:22px;align-items:start;margin:18px 0 60px}
+  .dcard{background:#fff;border:1px solid var(--line);border-radius:.25rem;box-shadow:var(--shadow);margin-bottom:18px}
+  .dcard-hd{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);font-weight:700;font-size:14px}
+  .dcard-hd .ic{width:1.75rem;height:1.75rem;border-radius:.2rem;display:grid;place-items:center;color:#fff;flex-shrink:0}
+  .dcard-bd{padding:16px}
+  .fieldgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px}
+  .fld .k{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+  .fld .v{font-size:14px;margin-top:3px}
+  .contact{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+  .contact .av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0176d3,#032d60);color:#fff;display:grid;place-items:center;font-weight:700;flex-shrink:0}
+  .contact .nm{font-weight:700;font-size:14px}
+  .contact .rl{font-size:12.5px;color:var(--muted)}
+  .clink{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--carmine);font-weight:600;margin-top:8px}
+  .timeline .ti{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+  .timeline .ti:first-child{border-top:0;padding-top:0}
+  .timeline .ti .dot{width:26px;height:26px;border-radius:50%;background:#eef4fb;color:#05628a;display:grid;place-items:center;flex-shrink:0}
+  .timeline .ti .tt{font-size:13.5px;font-weight:600}
+  .timeline .ti .tm{font-size:12px;color:var(--muted);margin-top:1px}
+  .assoc a{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line)}
+  .assoc a:first-child{border-top:0;padding-top:0}
+  .assoc a .di{color:var(--carmine);flex-shrink:0;margin-top:1px}
+  tbody tr[data-goto] .caseno{text-decoration:underline}
+  @media(max-width:900px){.rec-body{grid-template-columns:1fr}}
+
+  @media(max-width:900px){.hdr-search{display:none}}
+  /* --- responsive header: FULL-WIDTH so it adapts to the viewport (not the 1140 content column) --- */
+  header.site .wrap{max-width:none;padding:0 28px}
+  .bar{position:relative;gap:18px;flex-wrap:nowrap}
+  .brand,.header-right,.user{flex-shrink:0}
+  .header-right{gap:12px;align-items:center;margin-left:auto}
+  .avatar{flex-shrink:0;width:38px;height:38px}
+  .user .u-meta{white-space:nowrap}
+  .header-right .btn.primary{flex-shrink:0;white-space:nowrap}
+  nav.main{min-width:0;flex-shrink:0}
+  nav.main button{white-space:nowrap;padding:0 10px}
+  .hdr-menu{display:none;background:none;border:0;padding:8px;color:var(--ink);cursor:pointer;flex-shrink:0}
+  @media(max-width:1440px){.hdr-search{display:none}}
+  @media(max-width:1320px){.brand .div,.brand .sub{display:none}}
+  @media(max-width:1240px){nav.main button{padding:0 8px;font-size:13.5px}}
+  @media(max-width:1100px){header.site .u-meta{display:none}}
+  @media(max-width:980px){
+    .hdr-menu{display:flex}
+    .header-right .btn.primary{display:none}
+    nav.main{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;height:auto;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 8px 16px rgba(0,0,0,.12);padding:6px 0;z-index:39}
+    nav.main.open{display:flex}
+    nav.main button{height:auto;justify-content:flex-start;padding:13px 26px;box-shadow:none}
+    nav.main button.active{box-shadow:inset 3px 0 0 var(--carmine);background:#fff5f1}
+  }
+
+  /* --- simulated navigation + AI latency --- */
+  #navbar-load{position:fixed;top:0;left:0;height:3px;width:0;background:var(--carmine);z-index:100;opacity:0;transition:width .4s ease,opacity .2s;border-radius:0 2px 2px 0}
+  #navbar-load.go{opacity:1}
+  .spin{display:inline-block;width:18px;height:18px;border:2px solid #e5e5e5;border-top-color:var(--carmine);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;flex-shrink:0}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .ai-loading{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--muted);padding:4px 0}
+  .typing{display:inline-flex;gap:5px;align-items:center;padding:3px 2px}
+  .typing i{width:7px;height:7px;border-radius:50%;background:#b6b1bb;display:inline-block;animation:blink 1.2s infinite}
+  .typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+  @keyframes blink{0%,60%,100%{opacity:.25;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+  /* --- live specialist hand-off --- */
+  .sys{align-self:center;background:#eef4fb;color:#05628a;font-size:11.5px;font-weight:600;padding:5px 12px;border-radius:15rem;margin:2px 0;display:inline-flex;align-items:center;gap:7px}
+  .spec-join{align-self:center;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:4px 0}
+  .spec-join .jv{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#0176d3,#032d60);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center}
+</style>
+</head>
+<body>
+
+<div class="utility"><div class="wrap">
+  <div>Intended for <strong>verified healthcare professionals</strong> only</div>
+  <div class="u-right"><span>United States</span><span>English</span><span>Report an adverse event</span></div>
+</div></div>
+
+<header class="site"><div class="wrap"><div class="bar">
+  <div class="brand">
+    <img class="logo" src="data:image/png;base64,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" alt="Novartis" style="height:30px;width:auto;display:block">
+    <div class="div"></div>
+    <div class="sub">Medical Information<span>HCP Portal</span></div>
+  </div>
+  <nav class="main">
+    <button data-view="home" class="active">Home</button>
+    <button data-view="immunexis">Immunexis</button>
+    <button data-view="congresses">Congresses &amp; Events</button>
+    <button data-view="meded">Medical Education</button>
+    <button data-view="mine">My Inquiries</button>
+  </nav>
+  <div class="header-right">
+    <div class="hdr-search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input placeholder="Search articles, therapies…"></div>
+    <button class="btn primary" data-goto="ask" style="padding:9px 16px;font-size:14px">Ask a question</button>
+    <div class="user">
+      <div class="avatar">AM</div>
+      <div class="u-meta"><b>Dr. A. Morita</b><span>Verified HCP</span></div>
+    </div>
+    <button class="hdr-menu" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+  </div>
+</div></div></header>
+
+<!-- ============ HOME ============ -->
+<div class="view active" id="view-home">
+  <div class="hero"><div class="wrap">
+    <div class="eyebrow">Evidence-based medical information</div>
+    <h1>Reimagining medical information, <b>together</b>.</h1>
+    <p class="lead">Ask a question in your own words. Our AI search returns a synthesized answer from approved medical content, with citations you can verify.</p>
+
+    <div class="smart">
+      <div class="smart-ring"><div class="smart-inner">
+        <span class="spark"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15l-1.9-4.1L5.5 9l4.6-1.4L12 3Z"/><path d="M19 14l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8.8-2Z"/></svg></span>
+        <input id="searchInput" placeholder="e.g. What is the dosing schedule for Immunexis?" autocomplete="off">
+        <button class="btn ai" id="searchBtn">Ask AI</button>
+      </div></div>
+      <div class="smart-labels">
+        <span class="ai-badge"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2 6 6 2-6 2-2 6-2-6-6-2 6-2 2-6Z"/></svg> AI-powered · grounded in Knowledge</span>
+        <button class="suggest" data-q="How does Immunexis work?">How does Immunexis work?</button>
+        <button class="suggest" data-q="Dosing schedule for Immunexis">Dosing schedule</button>
+        <button class="suggest" data-q="Most common side effects of Immunexis">Common side effects</button>
+        <button class="suggest" data-q="Upcoming congresses and events">Upcoming congresses</button>
+      </div>
+    </div>
+
+    <div class="ai-answer" id="aiAnswer">
+      <div class="ai-top">
+        <span class="g"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2 6 6 2-6 2-2 6-2-6-6-2 6-2 2-6Z"/></svg></span>
+        <b>AI answer</b>
+        <span class="lbl">Agentforce · generated from approved content</span>
+      </div>
+      <div class="ai-main" id="aiMain"></div>
+      <div class="ai-foot">
+        <span class="dis">AI-generated summary. Always verify against the approved prescribing information. Not medical advice for individual patients.</span>
+        <div class="acts">
+          <button class="mini" data-chat="open">Ask a follow-up</button>
+          <button class="mini" data-goto="ask">Submit an inquiry</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-meta">
+      <div><b>640+</b> published responses</div>
+      <div><b>6</b> therapeutic areas</div>
+      <div>Avg. response time <b>1.4 business days</b></div>
+    </div>
+  </div></div>
+
+  <div class="wrap">
+    <section class="block">
+      <div class="sec-head lch"><span class="lch-ic orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><div><div class="eyebrow">Browse by area</div><h2>Explore therapeutic areas</h2></div><a class="more" href="#">View all therapies →</a></div>
+      <div class="ta-grid">
+        <div class="ta-card feat" data-goto="immunexis">
+          <span class="feat-tag">FEATURED</span>
+          <div class="ta-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5Z"/></svg></div>
+          <div><h3>Immunology</h3><p>Featuring <b>Immunexis</b> — plaque psoriasis &amp; psoriatic arthritis</p><div class="cnt">97 articles</div></div>
+        </div>
+        <div class="ta-card" data-goto="article">
+          <div class="ta-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20.8 5.6a5.5 5.5 0 0 0-7.8 0L12 6.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 22l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg></div>
+          <div><h3>Cardiovascular</h3><p>Heart failure, hypertension, lipid management</p><div class="cnt">142 articles</div></div>
+        </div>
+        <div class="ta-card" data-goto="article">
+          <div class="ta-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3a3 3 0 0 0-3 3 3 3 0 0 0-3 5 3 3 0 0 0 1 5 3 3 0 0 0 5 2 3 3 0 0 0 5-2 3 3 0 0 0 1-5 3 3 0 0 0-3-5 3 3 0 0 0-3-3Z"/><path d="M12 8v9"/></svg></div>
+          <div><h3>Neuroscience</h3><p>MS, migraine, neurodegenerative disease</p><div class="cnt">118 articles</div></div>
+        </div>
+        <div class="ta-card" data-goto="article">
+          <div class="ta-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3c-1 4-4 5-4 9a4 4 0 0 0 8 0c0-4-3-5-4-9Z"/></svg></div>
+          <div><h3>Oncology</h3><p>Solid tumors, hematology, targeted therapy</p><div class="cnt">156 articles</div></div>
+        </div>
+        <div class="ta-card" data-goto="article">
+          <div class="ta-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <div><h3>Ophthalmology</h3><p>Retinal disease, macular degeneration</p><div class="cnt">63 articles</div></div>
+        </div>
+        <div class="ta-card" data-goto="article">
+          <div class="ta-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 4v7m0 0c0 4-2 9-5 9-2 0-3-2-3-5 0-2 1-4 3-4Zm0 0c0 4 2 9 5 9 2 0 3-2 3-5 0-2-1-4-3-4Z"/></svg></div>
+          <div><h3>Respiratory</h3><p>Asthma, COPD, pulmonary conditions</p><div class="cnt">71 articles</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" style="padding-top:0">
+      <div class="sec-head lch"><span class="lch-ic blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6"/></svg></span><div><div class="eyebrow">Immunexis · most requested</div><h2>Popular medical information</h2></div><a class="more" href="#">All articles →</a></div>
+      <div class="art-list">
+        <div class="art-item" data-goto="article"><div class="doc"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div><div><h4>Immunexis — Dosing &amp; Administration</h4><p>Subcutaneous dosing schedule, initiation, and maintenance.</p><div style="margin-top:9px"><span class="tag">Immunology</span></div></div></div>
+        <div class="art-item" data-goto="article"><div class="doc"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div><div><h4>Immunexis — Mechanism of Action</h4><p>Selective IL-23 (p19) inhibition and downstream signaling.</p><div style="margin-top:9px"><span class="tag">Immunology</span></div></div></div>
+        <div class="art-item" data-goto="article"><div class="doc"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div><div><h4>Immunexis — Safety &amp; Tolerability</h4><p>Common adverse reactions and monitoring guidance.</p><div style="margin-top:9px"><span class="tag">Safety</span></div></div></div>
+        <div class="art-item" data-goto="article"><div class="doc"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div><div><h4>Immunexis — Storage &amp; Handling</h4><p>Refrigeration, room-temperature limits, and pen handling.</p><div style="margin-top:9px"><span class="tag">Immunology</span></div></div></div>
+      </div>
+    </section>
+
+    <section class="block" style="padding-top:0">
+      <div class="two-col">
+        <div>
+          <div class="sec-head" style="margin-bottom:16px"><div><div class="eyebrow">Where we'll be</div><h2 style="font-size:22px">Upcoming congresses</h2></div><a class="more" href="#" data-goto="congresses">All events →</a></div>
+          <div class="evt link" data-goto="congresses"><div class="date"><div class="mo">Oct</div><div class="dy">01</div></div><div class="meta"><h4>EADV Congress 2026</h4><div class="loc">Milan, Italy · Sep 30 – Oct 3</div><div class="sym">Immunexis symposium + Medical Info booth</div></div></div>
+          <div class="evt link" data-goto="congresses"><div class="date"><div class="mo">Oct</div><div class="dy">22</div></div><div class="meta"><h4>Fall Clinical Dermatology</h4><div class="loc">Las Vegas, USA · Oct 22–25</div><div class="sym">2 Immunexis data presentations</div></div></div>
+        </div>
+        <div>
+          <div class="sec-head" style="margin-bottom:16px"><div><div class="eyebrow">Keep learning</div><h2 style="font-size:22px">Medical education</h2></div><a class="more" href="#" data-goto="meded">Library →</a></div>
+          <div class="mecards" style="grid-template-columns:1fr 1fr">
+            <div class="me" data-goto="meded"><div class="thumb"><span class="type">WEBINAR</span><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m23 7-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div class="body"><h4>IL-23 biology in psoriasis</h4><div class="foot"><span>Live · 45 min</span><span>1.0 CME</span></div></div></div>
+            <div class="me" data-goto="meded"><div class="thumb"><span class="type">MODULE</span><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="body"><h4>Immunexis clinical data review</h4><div class="foot"><span>On-demand</span><span>0.75 CME</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" style="padding-top:0">
+      <div class="band">
+        <div><h2>Can't find your answer?</h2><p>Submit a medical inquiry for a documented, non-promotional response — or ask Agentforce for an instant answer grounded in approved Immunexis content.</p></div>
+        <div class="actions"><button class="btn primary" data-goto="ask">Ask a medical question</button><button class="btn ghost" data-chat="open">Chat with Agentforce</button></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ============ ASK ============ -->
+<div class="view" id="view-ask"><div class="wrap">
+  <div class="page-head"><div class="eyebrow">Medical inquiry</div><h1>Ask a medical question</h1><p>Submit your clinical or scientific question. Responses are documented, non-promotional, and reviewed by our Medical Information team.</p></div>
+  <div class="form-shell">
+    <div class="card">
+      <form class="inquiry" onsubmit="return false">
+        <div class="grid2">
+          <div class="fs"><label class="lbl">Product <span class="req">*</span></label><input class="field" value="Immunexis"></div>
+          <div class="fs"><label class="lbl">Therapeutic area</label><select class="field"><option>Immunology</option><option>Cardiovascular</option><option>Neuroscience</option><option>Oncology</option><option>Ophthalmology</option><option>Respiratory</option></select></div>
+        </div>
+        <div class="fs"><label class="lbl">Type of inquiry <span class="req">*</span></label><select class="field"><option>Select the kind of information you need…</option><option>Efficacy</option><option>Safety</option><option>Dosing &amp; Administration</option><option>Drug-Drug Interaction</option><option>Use in Special Populations</option><option>Off-Label Information</option><option>Product Availability</option><option>Other</option></select></div>
+        <div class="fs"><label class="lbl">Your question <span class="req">*</span> <span class="hint">— please avoid including patient-identifying details</span></label><textarea class="field" placeholder="Describe your clinical or scientific question about Immunexis…"></textarea></div>
+        <div class="grid2">
+          <div class="fs"><label class="lbl">Your specialty</label><select class="field"><option>Physician</option><option>Pharmacist</option><option>Nurse</option><option>Researcher</option><option>Other</option></select></div>
+          <div class="fs"><label class="lbl">Preferred response channel</label><select class="field"><option>Email</option><option>Phone</option><option>Portal message</option></select></div>
+        </div>
+        <div class="checkline">
+          <input type="checkbox" id="aeCheck">
+          <label for="aeCheck">This inquiry describes a suspected adverse event or product complaint<span>Check this box if your question involves a possible side effect, safety issue, or quality complaint.</span></label>
+        </div>
+        <div class="ae-reveal" id="aeReveal">
+          <div class="ae-head"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>ROUTED TO PHARMACOVIGILANCE</div>
+          <p>Thank you for reporting. This inquiry will be flagged and forwarded to our Patient Safety team, typically within 24 hours, in addition to the Medical Information response.</p>
+          <label class="lbl" style="color:#7a2248">Adverse event details</label>
+          <textarea class="field" style="min-height:90px;border-color:#eab6ce" placeholder="Describe the event: product & dose, event, onset, outcome, concomitant medications…"></textarea>
+        </div>
+        <div class="form-foot" style="margin-top:24px"><button class="btn primary" data-goto="mine">Submit inquiry</button><span class="note">You'll receive a case number and can track the response under My Inquiries.</span></div>
+      </form>
+    </div>
+    <div class="card rail">
+      <h4>What happens next</h4><p>Your inquiry is logged as a case and routed to the right specialist.</p>
+      <div class="step"><div class="n">1</div><div><b>Submitted</b>You get an email confirmation with your case number.</div></div>
+      <div class="step"><div class="n">2</div><div><b>Reviewed</b>A Medical Information specialist prepares a documented answer.</div></div>
+      <div class="step"><div class="n">3</div><div><b>Answered</b>You receive the response via your preferred channel.</div></div>
+      <div class="conf"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Handled confidentially and stored securely. Responses are non-promotional.</span></div>
+    </div>
+  </div>
+</div></div>
+
+<!-- ============ MY INQUIRIES ============ -->
+<div class="view" id="view-mine"><div class="wrap">
+  <div class="page-head"><div class="eyebrow">Your activity</div><h1>My inquiries</h1><p>Track the status of the medical questions you've submitted and read the responses from our team.</p></div>
+  <div class="card table-card">
+    <div class="tbl-top"><h3>4 inquiries</h3><div class="filters"><span class="chip on">All</span><span class="chip">Open</span><span class="chip">Answered</span></div></div>
+    <table>
+      <thead><tr><th>Case</th><th>Subject</th><th>Product</th><th>Submitted</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr data-goto="inquiry"><td class="caseno">#00042318</td><td class="subj"><b>Immunexis titration: 5&nbsp;mg → 10&nbsp;mg step-up (second-line)</b><span>Off-Label Information · submitted via field rep</span></td><td>Immunexis</td><td>28 Jul 2026</td><td><span class="st prog">In review</span></td></tr>
+        <tr><td class="caseno">#00042207</td><td class="subj"><b>Interaction with live vaccines</b><span>Drug-Drug Interaction</span></td><td>Immunexis</td><td>22 Jul 2026</td><td><span class="st prog">In progress</span></td></tr>
+        <tr><td class="caseno">#00041985</td><td class="subj"><b>Injection-site reaction after second dose</b><span>Safety · Adverse event</span></td><td>Immunexis</td><td>14 Jul 2026</td><td><span class="st ae">PV review</span></td></tr>
+        <tr><td class="caseno">#00041640</td><td class="subj"><b>Use during pregnancy — available data</b><span>Use in Special Populations</span></td><td>Immunexis</td><td>2 Jul 2026</td><td><span class="st ans">Answered</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
+
+<!-- ============ ARTICLE ============ -->
+<div class="view" id="view-article"><div class="wrap">
+  <div class="crumb"><a href="#" data-goto="home">Home</a> › <a href="#">Immunology</a> › Immunexis — Dosing &amp; Administration</div>
+  <div class="article-shell">
+    <article class="doc-body">
+      <div class="kb-head"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></span><div><div class="kb-t">Knowledge Article</div><div class="kb-m">Article 000012934 · Published Jun 2026 · Immunology</div></div><span class="kb-badge">Published</span></div>
+      <span class="tag">Immunology</span>
+      <h1>Immunexis — Dosing &amp; Administration</h1>
+      <div class="art-meta"><span>Medical Information · reviewed content</span> · <span>Updated Jun 2026</span> · <span>3 min read</span></div>
+      <div class="fict"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Immunexis is a fictional product used for demonstration only.</div>
+      <p>Immunexis is a fully human monoclonal antibody that selectively inhibits interleukin-23 (IL-23) by binding its p19 subunit. It is indicated for adults with moderate-to-severe plaque psoriasis and active psoriatic arthritis.</p>
+      <h2>Recommended dosing</h2>
+      <ul>
+        <li><b>150 mg</b> by subcutaneous injection at <b>Week 0</b> and <b>Week 4</b>, then <b>every 12 weeks</b> thereafter.</li>
+        <li>The same schedule applies for plaque psoriasis and psoriatic arthritis.</li>
+        <li>If a dose is missed, administer as soon as possible, then resume the regular 12-week schedule.</li>
+      </ul>
+      <h2>Administration &amp; storage</h2>
+      <ul>
+        <li>Supplied as a 150 mg/mL single-dose prefilled pen for subcutaneous use.</li>
+        <li>Store refrigerated at 2–8 °C in the original carton to protect from light; do not freeze or shake.</li>
+        <li>May be kept at room temperature (up to 25 °C) once, for up to 24 hours.</li>
+      </ul>
+      <div class="callout"><b>Safety note.</b> Evaluate patients for tuberculosis before initiation and avoid starting during an active, serious infection. If you observe a suspected adverse reaction, please report it so it reaches Pharmacovigilance.</div>
+      <div class="helpful"><b>Was this helpful?</b><button class="btn ghost">Yes</button><button class="btn ghost">No</button><span style="color:var(--muted);font-size:13px;margin-left:auto">Content is non-promotional and label-referenced.</span></div>
+    </article>
+    <aside class="rel">
+      <h4>Related articles</h4>
+      <a href="#">Immunexis — Mechanism of Action</a>
+      <a href="#">Immunexis — Safety &amp; Tolerability</a>
+      <a href="#">Immunexis — Use in Special Populations</a>
+      <a href="#">Reporting a Suspected Adverse Event</a>
+      <div class="ask-mini"><h4>Ask about Immunexis</h4><p>Get an instant answer from Agentforce, grounded in approved content.</p><button class="btn" data-chat="open">Chat with Agentforce</button></div>
+    </aside>
+  </div>
+</div></div>
+
+<!-- ============ IMMUNEXIS HUB ============ -->
+<div class="view" id="view-immunexis"><div class="wrap">
+  <div class="crumb"><a href="#" data-goto="home">Home</a> › Immunology › <b style="color:var(--ink)">Immunexis</b></div>
+  <div class="hub-hero">
+    <div class="h-l">
+      <div class="eyebrow">Therapy area · Immunology</div>
+      <h1>Immunexis</h1>
+      <p class="subttl">A selective IL-23 (p19) inhibitor for adults with moderate-to-severe plaque psoriasis and active psoriatic arthritis. Everything approved, in one place — mechanism, dosing, safety, data, education, and events.</p>
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" data-goto="ask">Ask about Immunexis</button><button class="btn ghost" data-chat="open">Chat with Agentforce</button></div>
+    </div>
+    <div class="fict"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Fictional product — demo only</div>
+  </div>
+
+  <div class="qfacts">
+    <div class="qfact"><div class="k">Class</div><div class="v sm">IL-23 (p19) inhibitor</div></div>
+    <div class="qfact"><div class="k">Route</div><div class="v sm">Subcutaneous pen</div></div>
+    <div class="qfact"><div class="k">Maintenance</div><div class="v">Every 12 wks</div></div>
+    <div class="qfact"><div class="k">Indications</div><div class="v sm">Plaque PsO · PsA</div></div>
+  </div>
+
+  <section class="block" style="padding:14px 0 8px">
+    <div class="sec-head lch"><span class="lch-ic blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6"/></svg></span><div><div class="eyebrow">Approved content</div><h2 style="font-size:24px">Key resources</h2></div></div>
+    <div class="reslist">
+      <div class="res" data-goto="article"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div><div><h4>Dosing &amp; Administration</h4><p>Initiation, maintenance, missed doses, and the prefilled pen.</p></div></div>
+      <div class="res" data-goto="article"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div><div><h4>Mechanism of Action</h4><p>Selective IL-23 p19 binding and the Th17 pathway.</p></div></div>
+      <div class="res" data-goto="article"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div><div><h4>Safety &amp; Tolerability</h4><p>Common adverse reactions and monitoring guidance.</p></div></div>
+      <div class="res" data-goto="article"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div><div><h4>Warnings &amp; Precautions</h4><p>TB screening, serious infections, and live vaccines.</p></div></div>
+      <div class="res" data-goto="article"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div><div><h4>Use in Special Populations</h4><p>Pregnancy, lactation, and organ impairment.</p></div></div>
+      <div class="res" data-goto="article"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div><div><h4>Efficacy Data</h4><p>Pivotal trial endpoints and response rates.</p></div></div>
+    </div>
+  </section>
+
+  <section class="block" style="padding:22px 0 8px">
+    <div class="sec-head lch"><span class="lch-ic green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg></span><div><div class="eyebrow">At a glance</div><h2 style="font-size:24px">Clinical highlights</h2></div><span style="font-size:12px;color:var(--muted)">Illustrative demo figures</span></div>
+    <div class="qfacts">
+      <div class="qfact"><div class="k">PASI 90 at Week 16</div><div class="v">71%</div></div>
+      <div class="qfact"><div class="k">Clear / almost clear (IGA 0/1)</div><div class="v">78%</div></div>
+      <div class="qfact"><div class="k">ACR20 in PsA</div><div class="v">62%</div></div>
+      <div class="qfact"><div class="k">Serious infection rate</div><div class="v">1.2%</div></div>
+    </div>
+  </section>
+
+  <section class="block" style="padding:22px 0 44px">
+    <div class="two-col">
+      <div>
+        <div class="sec-head" style="margin-bottom:16px"><div><div class="eyebrow">Where we'll be</div><h2 style="font-size:22px">Immunexis at congresses</h2></div><a class="more" href="#" data-goto="congresses">All events →</a></div>
+        <div class="evt link" data-goto="congresses"><div class="date"><div class="mo">Oct</div><div class="dy">01</div></div><div class="meta"><h4>EADV Congress 2026</h4><div class="loc">Milan · Sep 30 – Oct 3</div><div class="sym">Symposium: “Positioning IL-23 inhibition”</div></div></div>
+        <div class="evt link" data-goto="congresses"><div class="date"><div class="mo">Nov</div><div class="dy">07</div></div><div class="meta"><h4>ACR Convergence 2026</h4><div class="loc">Chicago · Nov 7–11</div><div class="sym">PsA late-breaking data</div></div></div>
+      </div>
+      <div>
+        <div class="sec-head" style="margin-bottom:16px"><div><div class="eyebrow">Keep learning</div><h2 style="font-size:22px">Immunexis education</h2></div><a class="more" href="#" data-goto="meded">Library →</a></div>
+        <div class="mecards" style="grid-template-columns:1fr 1fr">
+          <div class="me" data-goto="meded"><div class="thumb"><span class="type">VIDEO</span><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m23 7-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div class="body"><h4>Immunexis MoA animation</h4><div class="foot"><span>6 min</span><span>Watch</span></div></div></div>
+          <div class="me" data-goto="meded"><div class="thumb"><span class="type">MODULE</span><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="body"><h4>Clinical data deep-dive</h4><div class="foot"><span>On-demand</span><span>0.75 CME</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div></div>
+
+<!-- ============ CONGRESSES & EVENTS ============ -->
+<div class="view" id="view-congresses"><div class="wrap">
+  <div class="page-head"><div class="eyebrow">Congresses &amp; events</div><h1>Where Novartis Medical will be</h1><p>Upcoming scientific congresses with Novartis Medical Affairs presence — symposia, data presentations, and a Medical Information booth where you can meet the team. Dates and sessions are illustrative for this demo.</p></div>
+  <div class="card table-card" style="margin-bottom:44px">
+    <div class="tbl-top"><h3>Upcoming events</h3><div class="filters"><span class="chip on">All</span><span class="chip">Immunology</span><span class="chip">This quarter</span></div></div>
+    <div style="padding:18px 20px">
+      <div class="evt"><div class="date"><div class="mo">Oct</div><div class="dy">01</div></div><div class="meta"><h4>EADV Congress 2026</h4><div class="loc">Milan, Italy · Sep 30 – Oct 3, 2026 · Dermatology</div><div class="sym">Novartis symposium + Immunexis posters · Medical Info booth #A12</div></div><div class="ev-act"><button class="mini">View sessions</button><button class="mini">Add to calendar</button></div></div>
+      <div class="evt"><div class="date"><div class="mo">Oct</div><div class="dy">22</div></div><div class="meta"><h4>Fall Clinical Dermatology Conference</h4><div class="loc">Las Vegas, USA · Oct 22–25, 2026 · Dermatology</div><div class="sym">2 Immunexis data presentations · Meet-the-expert theater</div></div><div class="ev-act"><button class="mini">View sessions</button><button class="mini">Add to calendar</button></div></div>
+      <div class="evt"><div class="date"><div class="mo">Nov</div><div class="dy">07</div></div><div class="meta"><h4>ACR Convergence 2026</h4><div class="loc">Chicago, USA · Nov 7–11, 2026 · Rheumatology</div><div class="sym">PsA late-breaking data · Medical Info booth #613</div></div><div class="ev-act"><button class="mini">View sessions</button><button class="mini">Add to calendar</button></div></div>
+      <div class="evt"><div class="date"><div class="mo">Mar</div><div class="dy">06</div></div><div class="meta"><h4>AAD Annual Meeting 2027</h4><div class="loc">Orlando, USA · Mar 6–10, 2027 · Dermatology</div><div class="sym">Immunexis real-world evidence session</div></div><div class="ev-act"><button class="mini">View sessions</button><button class="mini">Add to calendar</button></div></div>
+      <div class="evt"><div class="date"><div class="mo">Jun</div><div class="dy">03</div></div><div class="meta"><h4>EULAR 2027</h4><div class="loc">Barcelona, Spain · Jun 3–6, 2027 · Rheumatology</div><div class="sym">Symposium on IL-23 in psoriatic disease</div></div><div class="ev-act"><button class="mini">View sessions</button><button class="mini">Add to calendar</button></div></div>
+    </div>
+  </div>
+</div></div>
+
+<!-- ============ MEDICAL EDUCATION ============ -->
+<div class="view" id="view-meded"><div class="wrap">
+  <div class="page-head"><div class="eyebrow">Medical education</div><h1>Learn at your own pace</h1><p>CME-accredited modules, on-demand webinars, and expert-led videos across immunology and Immunexis. Live sessions open for registration; on-demand content is available anytime.</p></div>
+
+  <section class="block" style="padding:18px 0 8px">
+    <div class="sec-head"><div><div class="eyebrow">Live</div><h2 style="font-size:22px">Upcoming webinars</h2></div></div>
+    <div class="evt"><div class="date"><div class="mo">Aug</div><div class="dy">14</div></div><div class="meta"><h4>IL-23 biology and the Th17 pathway in psoriasis</h4><div class="loc">Thu, Aug 14 · 5:00 PM CET · 45 min · Faculty-led</div><div class="sym">1.0 CME credit available</div></div><div class="ev-act"><button class="mini">Register</button></div></div>
+    <div class="evt"><div class="date"><div class="mo">Sep</div><div class="dy">09</div></div><div class="meta"><h4>Managing psoriatic arthritis: a case-based discussion</h4><div class="loc">Tue, Sep 9 · 4:00 PM CET · 60 min · Panel</div><div class="sym">1.0 CME credit available</div></div><div class="ev-act"><button class="mini">Register</button></div></div>
+  </section>
+
+  <section class="block" style="padding:10px 0 44px">
+    <div class="sec-head lch"><span class="lch-ic purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 2.5 3 6 3s6-2 6-3v-5"/></svg></span><div><div class="eyebrow">On demand</div><h2 style="font-size:22px">Education library</h2></div><div class="filters"><span class="chip on">All</span><span class="chip">Webinar</span><span class="chip">CME</span><span class="chip">Video</span></div></div>
+    <div class="mecards">
+      <div class="me"><div class="thumb"><span class="type">VIDEO</span><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m23 7-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div class="body"><h4>Immunexis mechanism of action</h4><p>Animated overview of selective IL-23 p19 inhibition.</p><div class="foot"><span>6 min</span><span>Watch</span></div></div></div>
+      <div class="me"><div class="thumb"><span class="type">CME MODULE</span><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="body"><h4>Immunexis clinical data deep-dive</h4><p>Pivotal trial design, endpoints, and results.</p><div class="foot"><span>On-demand</span><span>0.75 CME</span></div></div></div>
+      <div class="me"><div class="thumb"><span class="type">WEBINAR</span><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 10l4.55-2.28A1 1 0 0 1 21 8.6v6.8a1 1 0 0 1-1.45.89L15 14M5 6h9a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/></svg></div><div class="body"><h4>Treating to target in plaque psoriasis</h4><p>Recorded expert panel with Q&amp;A.</p><div class="foot"><span>52 min</span><span>1.0 CME</span></div></div></div>
+      <div class="me"><div class="thumb"><span class="type">GUIDE</span><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6"/></svg></div><div class="body"><h4>Screening &amp; monitoring checklist</h4><p>TB screening and infection risk before initiation.</p><div class="foot"><span>PDF</span><span>Download</span></div></div></div>
+      <div class="me"><div class="thumb"><span class="type">VIDEO</span><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m23 7-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div><div class="body"><h4>Prefilled pen: administration technique</h4><p>Step-by-step subcutaneous injection guidance.</p><div class="foot"><span>4 min</span><span>Watch</span></div></div></div>
+      <div class="me"><div class="thumb"><span class="type">CME MODULE</span><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="body"><h4>Psoriatic arthritis: from diagnosis to management</h4><p>Multidisciplinary approach and treatment goals.</p><div class="foot"><span>On-demand</span><span>1.25 CME</span></div></div></div>
+    </div>
+  </section>
+</div></div>
+
+<!-- ============ INQUIRY DETAIL (record page) ============ -->
+<div class="view" id="view-inquiry"><div class="wrap">
+  <div class="crumb"><a href="#" data-goto="home">Home</a> › <a href="#" data-goto="mine">My Inquiries</a> › <b style="color:var(--ink)">Case #00042318</b></div>
+
+  <div class="rec-hd">
+    <div class="top">
+      <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 4h16v13H5.5L4 18.5Z"/><path d="M8 9h8M8 13h5"/></svg></span>
+      <div class="t"><small>Medical Inquiry · Case</small><h1>Immunexis titration: 5&nbsp;mg → 10&nbsp;mg step-up (second-line)</h1></div>
+      <span class="st prog" style="align-self:flex-start">In review</span>
+    </div>
+    <div class="hl">
+      <div><div class="k">Case Number</div><div class="v">#00042318</div></div>
+      <div><div class="k">Product</div><div class="v">Immunexis</div></div>
+      <div><div class="k">Inquiry Type</div><div class="v">Off-Label Information</div></div>
+      <div><div class="k">Submitted via</div><div class="v">Field · E. Casto</div></div>
+      <div><div class="k">Submitted</div><div class="v">28 Jul 2026</div></div>
+      <div><div class="k">Target Response</div><div class="v">30 Jul 2026</div></div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px">
+      <button class="btn primary" data-act="escalate"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:2px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Escalate to a live specialist</button>
+      <button class="btn ghost" data-chat="open">Ask Agentforce</button>
+    </div>
+  </div>
+
+  <div class="path">
+    <div class="stg done">New</div>
+    <div class="stg cur">In Review</div>
+    <div class="stg">Response Ready</div>
+    <div class="stg">Answered</div>
+    <div class="stg">Closed</div>
+  </div>
+
+  <div class="rec-body">
+    <div>
+      <div class="dcard" style="border-color:#f5b775;background:#fff8ef">
+        <div class="dcard-bd" style="display:flex;gap:12px;align-items:flex-start">
+          <span style="width:1.9rem;height:1.9rem;border-radius:.2rem;background:#8c4b02;color:#fff;display:grid;place-items:center;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg></span>
+          <div><div style="font-weight:700;font-size:13.5px;color:#8c4b02">Agentforce triage · flagged for Medical Information review</div><div style="font-size:13px;color:#5c4a2e;margin-top:3px;line-height:1.55">Classified as a potential <b>off-label dosing</b> question — a step-up beyond the 5&nbsp;mg starting dose in a second-line setting. Routed to Medical Information; <b>no response is issued to the HCP until a specialist reviews.</b></div></div>
+        </div>
+      </div>
+
+      <div class="dcard">
+        <div class="dcard-hd"><span class="ic" style="background:#0176d3"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6"/></svg></span> Inquiry details</div>
+        <div class="dcard-bd">
+          <div class="fieldgrid">
+            <div class="fld"><div class="k">Requester (HCP)</div><div class="v">Dr. Aaron Morita</div></div>
+            <div class="fld"><div class="k">Organization</div><div class="v">Partners HealthCare</div></div>
+            <div class="fld"><div class="k">Submitted by</div><div class="v">Evan Casto · Field Representative</div></div>
+            <div class="fld"><div class="k">Specialty</div><div class="v">Physician · Dermatology</div></div>
+            <div class="fld"><div class="k">Therapeutic Area</div><div class="v">Immunology</div></div>
+            <div class="fld"><div class="k">Off-Label / Second-Line</div><div class="v" style="color:#8c4b02;font-weight:700">Yes — flagged</div></div>
+            <div class="fld"><div class="k">Preferred Response Channel</div><div class="v">Email</div></div>
+            <div class="fld"><div class="k">Involves an Adverse Event</div><div class="v">No</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcard">
+        <div class="dcard-hd"><span class="ic" style="background:#706e6b"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Your question</div>
+        <div class="dcard-bd"><p style="margin:0;font-size:14.5px;color:#2b2530;line-height:1.6">Captured during a field visit: Dr. Morita is treating a patient in a <b>second-line</b> setting who plateaued on <b>Immunexis 5&nbsp;mg</b> after eight weeks. He is asking about the recommended <b>titration / step-up timing to 10&nbsp;mg</b> and any additional monitoring required at the 10&nbsp;mg dose.</p></div>
+      </div>
+
+      <div class="dcard">
+        <div class="dcard-hd"><span class="ic" style="background:#2e844a"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span> Activity</div>
+        <div class="dcard-bd">
+          <div class="timeline">
+            <div class="ti"><span class="dot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="tt">Captured in the field</div><div class="tm">28 Jul 2026, 08:52 · by Evan Casto, Field Representative — on behalf of Dr. Morita</div></div></div>
+            <div class="ti"><span class="dot" style="background:#f0eaff;color:#5b2fb3"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15l-1.9-4.1L5.5 9l4.6-1.4z"/></svg></span><div><div class="tt">Agentforce triage — classified as off-label dosing</div><div class="tm">28 Jul 2026, 08:52 · Routed to Medical Information; response held pending review</div></div></div>
+            <div class="ti"><span class="dot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg></span><div><div class="tt">Assigned to Medical Information</div><div class="tm">28 Jul 2026, 08:53 · Immunology queue</div></div></div>
+            <div class="ti"><span class="dot" style="background:#fdf0d5;color:#8c4b02"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/></svg></span><div><div class="tt">In specialist review</div><div class="tm">Target response 30 Jul 2026</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dcard">
+        <div class="dcard-hd"><span class="ic" style="background:#F5511E"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 17l-5-5 5-5"/><path d="M4 12h11a5 5 0 0 1 5 5v2"/></svg></span> Ask a follow-up</div>
+        <div class="dcard-bd">
+          <textarea class="field" placeholder="Add a follow-up question or extra context for the Medical Information team…" style="min-height:92px"></textarea>
+          <div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn primary">Send follow-up</button><span style="font-size:12.5px;color:var(--muted)">Dr. Fischer, assigned to your case, will be notified.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="dcard">
+        <div class="dcard-hd"><span class="ic" style="background:#0176d3"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span> Point of contact</div>
+        <div class="dcard-bd">
+          <div class="contact"><span class="av">LF</span><div><div class="nm">Dr. Lena Fischer</div><div class="rl">Medical Information Specialist · Immunology</div></div></div>
+          <a class="clink" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg> medinfo.immunology@novartis-demo.com</a>
+          <a class="clink" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg> +1 (800) 555-0142</a>
+          <button class="btn primary" data-act="escalate" style="width:100%;justify-content:center;margin-top:14px">Start live chat with a specialist</button>
+        </div>
+      </div>
+
+      <div class="dcard">
+        <div class="dcard-hd"><span class="ic" style="background:#F5511E"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6"/></svg></span> Associated content</div>
+        <div class="dcard-bd assoc">
+          <a href="#" data-goto="article"><span class="di"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6"/></svg></span><span><b>Immunexis — Dosing &amp; Administration</b><br><span style="color:var(--muted);font-size:12.5px">Knowledge · Immunology</span></span></a>
+          <a href="#" data-goto="article"><span class="di"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6"/></svg></span><span><b>Use in Special Populations</b><br><span style="color:var(--muted);font-size:12.5px">Knowledge · Immunology</span></span></a>
+          <a href="#" data-chat="open"><span class="di"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15l-1.9-4.1L5.5 9l4.6-1.4z"/></svg></span><span><b>Ask Agentforce about this</b><br><span style="color:var(--muted);font-size:12.5px">Grounded on approved content</span></span></a>
+        </div>
+      </div>
+
+      <div class="dcard">
+        <div class="dcard-hd"><span class="ic" style="background:#706e6b"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></span> Case details</div>
+        <div class="dcard-bd">
+          <div class="fld" style="margin-bottom:13px"><div class="k">Status</div><div class="v" style="margin-top:5px"><span class="st prog">In review</span></div></div>
+          <div class="fld" style="margin-bottom:13px"><div class="k">Origin</div><div class="v">Field · Rep-submitted</div></div>
+          <div class="fld" style="margin-bottom:13px"><div class="k">Case Owner</div><div class="v">Medical Information Queue</div></div>
+          <div class="fld"><div class="k">Priority</div><div class="v">High · off-label review</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<footer class="site">
+  <div class="wrap">
+    <div>
+      <div class="brand" style="margin-bottom:14px"><img src="data:image/png;base64,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" alt="Novartis" style="height:26px;width:auto;display:block"><div class="div" style="background:rgba(255,255,255,.2)"></div><div class="sub" style="color:#fff">Medical Information<span style="color:#a99fb2">HCP Portal</span></div></div>
+      <p class="foot-note">This site provides medical and scientific information intended for healthcare professionals. Content is non-promotional and does not replace the approved prescribing information.</p>
+      <div class="sf-badge"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6a4 4 0 0 1 7.3-.6A3.5 3.5 0 0 1 22 8.8a3.4 3.4 0 0 1-3 3.4A3.8 3.8 0 0 1 15 15a3.7 3.7 0 0 1-1.6-.4A3.9 3.9 0 0 1 6 13.9 3.6 3.6 0 0 1 6.4 7 4 4 0 0 1 10 6Z"/></svg> Built on Salesforce Experience Cloud</div>
+      <div class="ae-foot"><b>Report an adverse event:</b> If you suspect a side effect, use the inquiry form and check the adverse-event box, or contact Patient Safety directly.</div>
+    </div>
+    <div><h5>Portal</h5><a href="#" data-goto="home">Home</a><a href="#" data-goto="immunexis">Immunexis</a><a href="#" data-goto="congresses">Congresses &amp; events</a><a href="#" data-goto="meded">Medical education</a><a href="#" data-goto="mine">My inquiries</a></div>
+    <div><h5>Support</h5><a href="#">HCP verification</a><a href="#">Privacy notice</a><a href="#">Terms of use</a><a href="#">Contact Medical Information</a></div>
+  </div>
+  <div class="legal"><div class="wrap"><span>© 2026 — Demo mockup for illustration only. Not an actual Novartis property. "Immunexis" is fictional.</span><span>For US Healthcare Professionals</span></div></div>
+</footer>
+
+<!-- ================= LIVE AGENTFORCE / MESSAGING FOR WEB =================
+     Paste your org's Embedded Messaging for Web snippet between the markers
+     below. Until then, "Escalate to a live specialist" runs a scripted
+     hand-off demo. Full org setup: LIVE-AGENT-SETUP.md
+     ====================================================================== -->
+<script>window.MEDINFO_LIVE = false; /* becomes live automatically once the snippet loads */</script>
+<!-- >>> PASTE EMBEDDED MESSAGING SNIPPET BELOW THIS LINE >>> -->
+<script type='text/javascript'>
+	function initEmbeddedMessaging() {
+		try {
+			embeddedservice_bootstrap.settings.language = 'en_US';
+			embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true; // portal's Escalate button launches it
+			embeddedservice_bootstrap.init(
+				'00DHp00000LVyT1',
+				'SDO_Messaging_for_Web',
+				'https://trailsignup-51e046589d475d.my.site.com/ESWSDOMessagingforWeb1783399604864',
+				{
+					scrt2URL: 'https://trailsignup-51e046589d475d.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type='text/javascript' src='https://trailsignup-51e046589d475d.my.site.com/ESWSDOMessagingforWeb1783399604864/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+<!-- <<< END EMBEDDED MESSAGING SNIPPET <<< -->
+
+<div id="navbar-load"></div>
+
+<!-- chat -->
+<button class="chat-launch" data-chat="toggle"><span class="dot"></span> Ask Agentforce</button>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-head">
+    <div class="bot">✦</div>
+    <div><b>Medical Info Assistant</b><span>Agentforce · online</span></div>
+    <button class="x" data-chat="close">×</button>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="msg bot">Hello Dr. Morita. I can answer questions about <b>Immunexis</b> from approved medical content, or help you file a medical inquiry. What would you like to know?</div>
+  </div>
+  <div class="chat-quick" id="chatQuick">
+    <button data-q="Talk to a specialist">Talk to a specialist</button>
+    <button data-q="How does Immunexis work?">How does it work?</button>
+    <button data-q="What is the dosing schedule for Immunexis?">Dosing schedule</button>
+    <button data-q="What are the common side effects of Immunexis?">Side effects</button>
+    <button data-q="How should Immunexis be stored?">Storage</button>
+    <button data-q="Who should not take Immunexis?">Contraindications</button>
+    <button data-q="What congresses is Novartis attending?">Congresses</button>
+    <button data-q="What medical education is available?">Education</button>
+  </div>
+  <div class="chat-input">
+    <input id="chatInput" placeholder="Ask about Immunexis…" autocomplete="off">
+    <button id="chatSend"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button>
+  </div>
+  <div class="disclaimer">Responses are grounded in approved content. Not medical advice for individual patients.</div>
+</div>
+
+<script>
+  const views=document.querySelectorAll('.view');
+  const navBtns=document.querySelectorAll('nav.main button');
+  const loadBar=document.getElementById('navbar-load');
+  function navLoad(){loadBar.style.width='0';loadBar.classList.add('go');requestAnimationFrame(()=>{loadBar.style.width='85%';});}
+  function navDone(){loadBar.style.width='100%';setTimeout(()=>{loadBar.classList.remove('go');loadBar.style.width='0';},260);}
+  let navBusy=false;
+  function show(view){
+    if(navBusy)return;
+    navBusy=true;navLoad();
+    setTimeout(()=>{
+      views.forEach(v=>v.classList.toggle('active', v.id==='view-'+view));
+      navBtns.forEach(b=>b.classList.toggle('active', b.dataset.view===view));
+      window.scrollTo({top:0,behavior:'auto'});
+      navDone();navBusy=false;
+    },430);
+  }
+  navBtns.forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));
+  const navMain=document.querySelector('nav.main'),menuBtn=document.querySelector('.hdr-menu');
+  if(menuBtn)menuBtn.addEventListener('click',()=>navMain.classList.toggle('open'));
+  navBtns.forEach(b=>b.addEventListener('click',()=>navMain.classList.remove('open')));
+  document.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();show(el.dataset.goto);}));
+
+  // adverse-event reveal
+  const aeCheck=document.getElementById('aeCheck'),aeReveal=document.getElementById('aeReveal');
+  aeCheck.addEventListener('change',()=>aeReveal.classList.toggle('show',aeCheck.checked));
+
+  // ---- Knowledge engine (Immunexis) : shared by AI search + Agentforce ----
+  const KB=[
+    {k:['work','mechanism','action','moa','il-23','il23','how does'],title:'Mechanism of Action',
+     html:`<h3>How Immunexis works</h3><p>Immunexis is a fully human monoclonal antibody that selectively binds the <b>p19 subunit of interleukin-23 (IL-23)</b>, blocking its interaction with the IL-23 receptor. This inhibits the downstream Th17 inflammatory pathway that drives plaque psoriasis and psoriatic arthritis.</p>`,
+     src:'Immunexis — Mechanism of Action'},
+    {k:['dose','dosing','schedule','how often','how much','administer','frequency','150'],title:'Dosing & Administration',
+     html:`<h3>Dosing schedule</h3><ul><li><b>150 mg</b> subcutaneously at <b>Week 0</b> and <b>Week 4</b></li><li>Then <b>every 12 weeks</b> thereafter</li><li>Same schedule for plaque psoriasis and psoriatic arthritis</li></ul><p>Administered via a 150 mg/mL single-dose prefilled pen.</p>`,
+     src:'Immunexis — Dosing & Administration'},
+    {k:['store','storage','fridge','refriger','temperature','keep','handling','shake','freeze'],title:'Storage & Handling',
+     html:`<h3>Storage &amp; handling</h3><ul><li>Refrigerate at <b>2–8 °C</b> in the original carton, protected from light</li><li>Do not freeze or shake</li><li>May be kept at room temperature (up to 25 °C) once, for up to <b>24 hours</b></li></ul>`,
+     src:'Immunexis — Storage & Handling'},
+    {k:['side effect','adverse','safety','tolerab','reaction','common','risks'],title:'Safety & Tolerability',
+     html:`<h3>Common adverse reactions</h3><p>The most commonly reported reactions were <b>nasopharyngitis, upper respiratory tract infections, injection-site reactions, and headache</b>. Most were mild to moderate.</p><p>If you suspect an adverse event, please report it via a medical inquiry so it reaches Pharmacovigilance.</p>`,
+     src:'Immunexis — Safety & Tolerability'},
+    {k:['contraindicat','should not','avoid','warning','precaution','tuberculosis','tb','infection','vaccine'],title:'Warnings & Precautions',
+     html:`<h3>Who should not take Immunexis</h3><ul><li>Contraindicated with clinically significant hypersensitivity to the product</li><li><b>Screen for tuberculosis</b> before initiation</li><li>Do not start during an active, serious infection</li><li>Avoid <b>live vaccines</b> during treatment</li></ul>`,
+     src:'Immunexis — Warnings & Precautions'},
+    {k:['pregnan','lactation','breastfeed','special population','pediatric','elderly','renal','hepatic'],title:'Use in Special Populations',
+     html:`<h3>Use in special populations</h3><p>There are limited data on use in pregnancy; human IgG crosses the placenta, so use only if the potential benefit justifies the potential risk. Discuss lactation, pediatric, and organ-impairment considerations case by case.</p>`,
+     src:'Immunexis — Use in Special Populations'},
+    {k:['what is','indicat','approved','used for','treat','psoriasis','arthritis'],title:'Indication',
+     html:`<h3>What Immunexis is for</h3><p>Immunexis is indicated for adults with <b>moderate-to-severe plaque psoriasis</b> and <b>active psoriatic arthritis</b>. It is a selective IL-23 (p19) inhibitor given by subcutaneous injection.</p>`,
+     src:'Immunexis — Prescribing Overview'},
+    {k:['congress','conference','event','symposi','booth','meeting','eadv','eular','aad','acr','maui','fall clinical','poster','presentation','exhibit'],goto:'congresses',title:'Congresses & Events',
+     html:`<h3>Upcoming congresses</h3><p>Novartis Medical Affairs will be present at several meetings, including <b>EADV 2026</b> (Milan, Sep 30–Oct 3), <b>Fall Clinical Dermatology</b> (Las Vegas, Oct 22–25), and <b>ACR Convergence 2026</b> (Chicago, Nov 7–11) — each with Immunexis data presentations and a Medical Information booth.</p>`,
+     src:'Congresses & Events'},
+    {k:['education','cme','webinar','training','learn','course','video','module','on-demand','credit','teaching','lecture'],goto:'meded',title:'Medical Education',
+     html:`<h3>Medical education</h3><p>The education library has CME-accredited modules, on-demand webinars, and expert videos on IL-23 biology, psoriasis and PsA management, and Immunexis clinical data. New live webinars are scheduled monthly.</p>`,
+     src:'Medical Education'}
+  ];
+  function lookup(q){
+    q=(q||'').toLowerCase();
+    let best=null,score=0;
+    KB.forEach(e=>{const s=e.k.reduce((a,kw)=>a+(q.includes(kw)?1:0),0);if(s>score){score=s;best=e;}});
+    return score>0?best:null;
+  }
+
+  // ---- AI smart search ----
+  const searchInput=document.getElementById('searchInput'),aiAnswer=document.getElementById('aiAnswer'),aiMain=document.getElementById('aiMain');
+  function runSearch(q){
+    const hit=lookup(q)|| KB[6];
+    aiAnswer.classList.add('show');
+    aiMain.innerHTML='<div class="ai-loading"><span class="spin"></span> Agentforce is reviewing approved content…</div>';
+    aiAnswer.scrollIntoView({behavior:'smooth',block:'nearest'});
+    setTimeout(()=>{
+      aiMain.innerHTML=hit.html+`<div class="sources"><span class="src-chip" data-goto="${hit.goto||'article'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6"/></svg>${hit.src}</span></div>`;
+      aiMain.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>show(el.dataset.goto)));
+    },1300);
+  }
+  document.getElementById('searchBtn').addEventListener('click',()=>runSearch(searchInput.value));
+  searchInput.addEventListener('keydown',e=>{if(e.key==='Enter')runSearch(searchInput.value);});
+  document.querySelectorAll('.suggest').forEach(b=>b.addEventListener('click',()=>{searchInput.value=b.dataset.q;runSearch(b.dataset.q);}));
+
+  // ---- chat ----
+  const panel=document.getElementById('chatPanel'),chatBody=document.getElementById('chatBody'),chatInput=document.getElementById('chatInput');
+  const chatHeadB=panel.querySelector('.chat-head b'),chatHeadS=panel.querySelector('.chat-head span');
+  function setAIHeader(){chatHeadB.textContent='Medical Info Assistant';chatHeadS.textContent='Agentforce · online';}
+  function chatNode(html,cls){const d=document.createElement('div');d.className=cls;d.innerHTML=html;chatBody.appendChild(d);chatBody.scrollTop=chatBody.scrollHeight;return d;}
+  document.querySelectorAll('[data-chat]').forEach(el=>el.addEventListener('click',()=>{
+    const a=el.dataset.chat;
+    if(a==='open'){setAIHeader();panel.classList.add('open');}
+    else if(a==='close')panel.classList.remove('open');
+    else {if(!panel.classList.contains('open'))setAIHeader();panel.classList.toggle('open');}
+  }));
+  // --- escalate to a live Medical Information specialist ---
+  // If the org's Embedded Messaging for Web snippet is present, launch the real
+  // Salesforce widget (prefilled with case context). Otherwise, run a scripted hand-off.
+  function escalate(){
+    if(window.MEDINFO_LIVE || typeof embeddedservice_bootstrap!=='undefined'){
+      try{
+        try{
+          if(window.embeddedservice_bootstrap && embeddedservice_bootstrap.prechatAPI){
+            embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({Case_Number:'00042318',Product:'Immunexis',Topic:'Off-label titration (5 to 10 mg)'});
+          }
+        }catch(pf){/* pre-chat fields are optional — ignore if the deployment doesn't define them */}
+        embeddedservice_bootstrap.utilAPI.launchChat();
+        return;
+      }catch(e){/* widget not ready — fall back to the scripted hand-off */}
+    }
+    liveSim();
+  }
+  function liveSim(){
+    panel.classList.add('open');
+    chatHeadB.textContent='Medical Information';chatHeadS.textContent='Live specialist chat';
+    chatNode('<span class="spin" style="width:13px;height:13px;border-width:2px"></span> Connecting you to a Medical Information specialist…','sys');
+    setTimeout(()=>{
+      chatNode('<span class="jv">LF</span> Dr. Lena Fischer joined the conversation','spec-join');
+      addMsg(`Hi Dr. Morita — Lena from Medical Information. I can see your inquiry about the <b>Immunexis 5&nbsp;mg → 10&nbsp;mg titration</b> in a second-line setting. As this is off-label I'll talk through the available data with you live, and we'll also send a documented written response. What would be most helpful to start?`,'bot');
+    },2300);
+  }
+  document.querySelectorAll('[data-act="escalate"]').forEach(b=>b.addEventListener('click',escalate));
+  function addMsg(html,who){const d=document.createElement('div');d.className='msg '+who;d.innerHTML=html;chatBody.appendChild(d);chatBody.scrollTop=chatBody.scrollHeight;return d;}
+  const ESCALATE_KW=['specialist','talk to a person','speak to a person','talk to someone','speak to someone','real person','a human','representative','connect me','connect with','live agent','live chat','live person','escalate','medical information team','talk to medical','speak with someone','talk to a rep'];
+  function wantsEscalation(q){q=(q||'').toLowerCase();return ESCALATE_KW.some(k=>q.includes(k));}
+  function botReply(q){
+    if(wantsEscalation(q)){
+      const t=addMsg('<span class="typing"><i></i><i></i><i></i></span>','bot');
+      setTimeout(()=>{t.remove();addMsg('Of course — connecting you with a Medical Information specialist now.','bot');setTimeout(escalate,600);},900);
+      return;
+    }
+    const hit=lookup(q);
+    const typing=addMsg('<span class="typing"><i></i><i></i><i></i></span>','bot');
+    setTimeout(()=>{
+      typing.remove();
+      if(hit){addMsg(hit.html+`<span class="src"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z"/><path d="M14 3v6h6"/></svg>Source: ${hit.src}</span>`,'bot');}
+      else{const d=addMsg(`I don't have an approved answer for that specific question about Immunexis. Would you like me to start a <b>Medical Inquiry</b>, or connect with a specialist?`,'bot');
+        const b=document.createElement('button');b.className='btn ai';b.style.cssText='margin-top:10px;padding:9px 14px;font-size:12.5px';b.textContent='Create a Medical Inquiry';b.addEventListener('click',()=>{panel.classList.remove('open');show('ask');});d.appendChild(b);
+        const b2=document.createElement('button');b2.className='mini';b2.style.cssText='margin:10px 0 0 8px;padding:9px 14px;font-size:12.5px';b2.textContent='Talk to a specialist';b2.addEventListener('click',escalate);d.appendChild(b2);}
+    },1400);
+  }
+  function sendChat(q){q=(q||'').trim();if(!q)return;addMsg(q,'me');chatInput.value='';botReply(q);}
+  document.getElementById('chatSend').addEventListener('click',()=>sendChat(chatInput.value));
+  chatInput.addEventListener('keydown',e=>{if(e.key==='Enter')sendChat(chatInput.value);});
+  document.querySelectorAll('#chatQuick button').forEach(b=>b.addEventListener('click',()=>sendChat(b.dataset.q)));
+
+  document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');}));
+</script>
+</body>
+</html>
