@@ -1148,17 +1148,33 @@
   // --- escalate to a live Medical Information specialist ---
   // If the org's Embedded Messaging for Web snippet is present, launch the real
   // Salesforce widget (prefilled with case context). Otherwise, run a scripted hand-off.
+  window.addEventListener('onEmbeddedMessagingReady',function(){window.__miawReady=true;});
+  window.addEventListener('onEmbeddedMessagingButtonCreated',function(){window.__miawButtonReady=true;});
+  function miawSetPrechat(){
+    try{
+      if(window.__miawReady && window.embeddedservice_bootstrap && embeddedservice_bootstrap.prechatAPI){
+        embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({Case_Number:'00042318',Product:'Immunexis',Topic:'Off-label titration (5 to 10 mg)'});
+      }
+    }catch(e){/* pre-chat fields optional */}
+  }
+  function miawLaunch(){
+    try{ miawSetPrechat(); var p=embeddedservice_bootstrap.utilAPI.launchChat(); if(p&&p.catch)p.catch(function(){}); return true; }
+    catch(e){ return false; }
+  }
   function escalate(){
-    if(window.MEDINFO_LIVE || typeof embeddedservice_bootstrap!=='undefined'){
-      try{
-        try{
-          if(window.embeddedservice_bootstrap && embeddedservice_bootstrap.prechatAPI){
-            embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({Case_Number:'00042318',Product:'Immunexis',Topic:'Off-label titration (5 to 10 mg)'});
-          }
-        }catch(pf){/* pre-chat fields are optional — ignore if the deployment doesn't define them */}
-        embeddedservice_bootstrap.utilAPI.launchChat();
+    // Launch the real MIAW widget once it's ready; wait for it to initialize; fall back only if it never loads.
+    if(typeof embeddedservice_bootstrap!=='undefined' || window.MEDINFO_LIVE){
+      if(window.__miawButtonReady && window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI){
+        if(miawLaunch())return;
+      }else{
+        var waited=0, iv=setInterval(function(){
+          waited+=300;
+          if(window.__miawButtonReady && window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI){
+            clearInterval(iv); if(!miawLaunch()) liveSim();
+          }else if(waited>=4000){ clearInterval(iv); liveSim(); }
+        },300);
         return;
-      }catch(e){/* widget not ready — fall back to the scripted hand-off */}
+      }
     }
     liveSim();
   }
